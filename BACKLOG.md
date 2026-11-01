@@ -8,7 +8,10 @@
 - Só o dono convida ou remove pessoas; o coautor não convida.
 - O leitor também vê o histórico e a evolução das posições da carteira.
 - Posição = uma linha do que se tem (instituição + categoria + valor). Vender ativos ou retirar/devolver da reserva é só atualizar o valor da posição. Passar dinheiro de uma carteira para outra (ex.: cripto para a carteira de um filho) já funciona ajustando as duas posições à mão.
-- Começa só com o saldo atualizado, sem registrar cada movimentação.
+- Reservas, renda fixa, dólar: livro de movimentos (depósito, retirada, rendimento, com motivo); "ajustar saldo" cria o movimento sozinho.
+- Ações, FIIs, cripto: operações por ativo (compra, venda, subscrição) e eventos do ativo (troca de ticker, agrupamento); preço médio e lucro calculados no servidor.
+- Reservas de emergência e de oportunidade são categorias da carteira, com os bancos dentro.
+- As planilhas atuais servem só de referência de conteúdo, não de layout.
 
 ## Fase 1: base
 - [ ] Estrutura do repositório (`web/`, `backend/`, `scripts/`, `template.yaml`) a partir do padrão do `financas-ai`.
@@ -17,6 +20,8 @@
 - [ ] Criar carteira, seletor de carteira ativa e convite por e-mail (como o `seed.sh` do `financas-ai`).
 - [ ] Isolamento por carteira no servidor, com testes de que ninguém lê ou grava em carteira sem papel nela.
 - [ ] CRUD de instituições, categorias e posições.
+- [ ] Movimentos e "ajustar saldo" nas categorias por saldo.
+- [ ] Ativos, operações e eventos (troca de ticker, agrupamento) nas categorias por ativo, com preço médio no servidor.
 
 ## Fase 2: visualização
 - [ ] Resumo: patrimônio total e total por categoria.
@@ -34,8 +39,9 @@
 - Cotações automáticas de ações, FIIs, cripto e dólar.
 - Conversão de dólar para real na visão consolidada.
 - Transferência entre carteiras: um só lançamento que diminui uma posição e aumenta a outra, com os dois lados ligados. Só entre carteiras em que a pessoa é dono ou coautor. Dois casos: em reais (vende a cripto, passa o BRL e ele vira renda fixa na carteira do filho) e do próprio ativo (a cripto em si muda de carteira).
-- Registrar movimentações (aporte, resgate, venda) além do saldo, para ver o que entrou e saiu de cada posição.
-- Metas por categoria (por exemplo, valor-alvo da reserva de emergência).
+- Metas por categoria: reserva esperada = meses de reserva × gasto mensal, com o quanto falta.
+- Dólar com detalhe da conversão: cotação, spread, IOF e VET.
+- Impostos e histórico de lucro dos ativos vendidos.
 
 ## Perguntas em aberto
 - Dólar: guardar o valor em USD e converter pela cotação, ou guardar já em BRL?

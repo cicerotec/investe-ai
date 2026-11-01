@@ -18,16 +18,28 @@ A lista é configurável, para criar ou renomear categorias sem mexer no código
 ## Modelo de dados
 | Entidade | Campos principais |
 |---|---|
-| **Instituição** | nome, tipo (banco, corretora, exchange) |
-| **Categoria** | nome, cor, ordem |
-| **Posição** | carteira, instituição, categoria, descrição do ativo, moeda (BRL ou USD), valor atual, data da última atualização |
 | **Carteira** | nome, moeda base |
 | **Acesso** | pessoa (login), carteira, papel (dono, coautor ou leitor) |
-| **Histórico** | posição, valor, data (um registro a cada atualização, para ver a evolução) |
+| **Instituição** | carteira, nome, tipo (banco, corretora, exchange) |
+| **Categoria** | carteira, nome, cor, ordem, tipo de controle (saldo ou ativo), meta opcional |
+| **Posição** | carteira, instituição, categoria, descrição, moeda, saldo (calculado) |
+| **Movimento** | posição, data, tipo (depósito, retirada, rendimento), valor, motivo (texto livre) |
+| **Ativo** | carteira, ticker, tipo (ação, FII, cripto) |
+| **Operação** | ativo, instituição, data, tipo (compra, venda, subscrição), quantidade, preço, impostos |
+| **Evento do ativo** | ativo, data, tipo (troca de ticker, agrupamento, desdobramento), proporção |
+| **Histórico** | valor total da carteira e por categoria ao longo do tempo (para a evolução) |
 
-Instituições, categorias e posições pertencem a uma carteira. Uma posição liga uma instituição a uma categoria. Isso permite as duas visões:
+Há dois jeitos de controlar uma categoria:
+- **Por saldo** (reservas, renda fixa, dólar): a posição é um livro de movimentos, e o saldo é a soma. O motivo de cada movimento fica registrado.
+  "Ajustar saldo" cria sozinho o movimento de rendimento (ou a diferença), para dar pouco trabalho.
+- **Por ativo** (ações, FIIs, cripto): a posição vem das operações. O servidor calcula quantidade, preço médio, lucro e % de alocação,
+  e aplica os eventos do ativo (por exemplo, `WIZC3` virou `WIZS3`; agrupamento na proporção de 1 para 1,1).
+
+As reservas de emergência e de oportunidade são categorias da carteira, com os bancos dentro. Isso permite as duas visões:
 - por categoria: quanto há em reserva de emergência e em quais bancos;
 - por instituição: tudo o que está em cada banco ou corretora.
+
+Totais, médias, lucro, alocação e evolução são sempre calculados no servidor, nunca digitados.
 
 ## Carteiras e acesso
 A unidade do app é a **carteira**: o conjunto de investimentos de uma pessoa (ou família). Cada carteira é um espaço isolado, com as próprias
@@ -53,10 +65,10 @@ Regras:
 - O que não está liberado explicitamente é negado, com testes ao lado do código.
 
 ## Telas
-1. **Resumo:** patrimônio total e total por categoria.
+1. **Resumo:** patrimônio total, total e % de alocação por categoria, evolução e progresso das metas.
 2. **Categoria:** posições da categoria agrupadas por instituição.
 3. **Instituição:** posições da instituição agrupadas por categoria.
-4. **Atualizar valores:** lista das posições com edição rápida do valor.
+4. **Atualizar:** ajustar saldo, lançar movimento (com motivo) e registrar operação de compra ou venda.
 5. **Cadastros:** instituições, categorias e posições.
 6. **Carteiras e acessos:** trocar de carteira, criar uma nova e convidar ou remover pessoas (só o dono).
 
